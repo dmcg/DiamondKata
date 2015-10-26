@@ -1,27 +1,10 @@
 import org.junit.Test;
 
-import java.util.function.Predicate;
+import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class DiamondTest {
-
-    @Test
-    public void a_is_a_single_line() {
-        assertDiamond('A',
-                "A"
-        );
-    }
-
-    @Test
-    public void b_is_three_lines() {
-        assertDiamond('B',
-                "A",
-                "BB",
-                "A"
-        );
-    }
 
     @Test
     public void line_count() {
@@ -33,21 +16,29 @@ public class DiamondTest {
         }
     }
 
-    private void assertDiamond(char c, String... lines) {
-        assertArrayEquals(lines, diamond(c));
+    @Test
+    public void character_count() {
+        for (char c = 'A'; c <= 'Z'; c++) {
+            int ordinal = c - 'A';
+            int lineCount = 2 * ordinal + 1;
+            String[] diamond = diamond(c);
+            for (int i = 0; i < diamond.length; i++) {
+                String line = diamond[i];
+                assertEquals(String.format("For character %s, line %s, %s", c, i, line), lineCount, line.length());
+            }
+        }
     }
 
     private String[] diamond(char c) {
         int ordinal = c - 'A';
         int lineCount = 2 * ordinal + 1;
-        if (c == 'A')
-        return new String[] {"A"};
-        else if (c == 'B') return                new String[]
-                {
-                        "A",
-                        "BB",
-                        "A"
-                };
-        else return new String[lineCount];
+        String[] result = new String[lineCount];
+
+        for (int i = 0; i < lineCount; i++) {
+            char[] chars = new char[lineCount];
+            Arrays.fill(chars, ' ');
+            result[i] = new String(chars);
+        }
+        return result;
     }
 }
