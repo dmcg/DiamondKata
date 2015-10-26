@@ -12,7 +12,27 @@ public class DiamondTest {
         );
     }
 
+    @Test
+    public void b_is_three_lines() {
+        assertArrayEquals(
+                new String[]
+                        {
+                        "A",
+                        "BB",
+                        "A"
+                        },
+                diamond('B')
+        );
+    }
+
     private String[] diamond(char a) {
+        if (a == 'A')
         return new String[] {"A"};
+        else return                new String[]
+                {
+                        "A",
+                        "BB",
+                        "A"
+                };
     }
 }
