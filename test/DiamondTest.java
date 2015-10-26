@@ -2,6 +2,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class DiamondTest {
@@ -21,7 +22,7 @@ public class DiamondTest {
     }
 
     @Test
-    public void character_for_line_goes_up_then_down() {
+    public void characterForLine_goes_up_then_down() {
         assertEquals('A', characterForLine('A', 0));
 
         assertEquals('A', characterForLine('C', 0));
@@ -29,11 +30,28 @@ public class DiamondTest {
         assertEquals('C', characterForLine('C', 2));
         assertEquals('B', characterForLine('C', 3));
         assertEquals('A', characterForLine('C', 4));
-
     }
 
-    private char characterForLine(char c, int index) {
-        int distanceFromEnd = index <= ordinal(c) ? index : lineCountFor(c) - index - 1;
+    @Test
+    public void locationsInLine_goes_out_then_in() {
+        assertArrayEquals(pair(0, 0), locationsInLine('A', 0));
+
+        assertArrayEquals(pair(2, 2), locationsInLine('C', 0));
+        assertArrayEquals(pair(1, 3), locationsInLine('C', 1));
+        assertArrayEquals(pair(0, 4), locationsInLine('C', 2));
+        assertArrayEquals(pair(1, 3), locationsInLine('C', 3));
+        assertArrayEquals(pair(2, 2), locationsInLine('C', 4));
+    }
+
+    private int[] locationsInLine(char c, int lineIndex) {
+        int lineLength = lineCountFor(c);
+        int centre = lineLength / 2;
+        int distanceFromEnd = lineIndex <= ordinal(c) ? lineIndex : lineLength - lineIndex - 1;
+        return new int[] {centre - distanceFromEnd, centre + distanceFromEnd};
+    }
+
+    private char characterForLine(char c, int lineIndex) {
+        int distanceFromEnd = lineIndex <= ordinal(c) ? lineIndex : lineCountFor(c) - lineIndex - 1;
         return (char) ('A' + distanceFromEnd);
     }
 
@@ -49,6 +67,10 @@ public class DiamondTest {
             result[i] = new String(chars);
         }
         return result;
+    }
+
+    private int[] pair(int i1, int i2) {
+        return new int[]{i1, i2};
     }
 
 
