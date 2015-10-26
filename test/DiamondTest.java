@@ -10,7 +10,7 @@ public class DiamondTest {
     @Test
     public void line_count() {
         checkLines((c, lines) ->
-            assertEquals("For character " + c, lineCountFor(c), lines.length)
+            assertEquals("For character " + c, 2 * ordinal(c) + 1, lines.length)
         );
     }
 
@@ -43,6 +43,40 @@ public class DiamondTest {
         assertArrayEquals(pair(2, 2), locationsInLine('C', 4));
     }
 
+    @Test
+    public void lineFor_combines_character_and_location() {
+        assertEquals("A", lineFor('A', 0));
+
+        assertEquals("  A  ", lineFor('C', 0));
+        assertEquals(" B B ", lineFor('C', 1));
+        assertEquals("C   C", lineFor('C', 2));
+        assertEquals(" B B ", lineFor('C', 3));
+        assertEquals("  A  ", lineFor('C', 4));
+    }
+
+    @Test
+    public void test() {
+        assertArrayEquals(arrayOf("A"), diamond('A'));
+
+        assertArrayEquals(arrayOf(
+                "  A  ",
+                " B B ",
+                "C   C",
+                " B B ",
+                "  A  "),
+            diamond('C'));
+    }
+
+    private String lineFor(char c, int lineIndex) {
+        int lineLength = lineCountFor(c);
+        char[] chars = new char[lineLength];
+        Arrays.fill(chars, ' ');
+        int[] locations = locationsInLine(c, lineIndex);
+        chars[locations[0]] = characterForLine(c, lineIndex);
+        chars[locations[1]] = characterForLine(c, lineIndex);
+        return new String(chars);
+    }
+
     private int[] locationsInLine(char c, int lineIndex) {
         int lineLength = lineCountFor(c);
         int centre = lineLength / 2;
@@ -55,16 +89,13 @@ public class DiamondTest {
         return (char) ('A' + distanceFromEnd);
     }
 
-
     private String[] diamond(char c) {
         int ordinal = ordinal(c);
         int lineCount = 2 * ordinal + 1;
         String[] result = new String[lineCount];
 
         for (int i = 0; i < lineCount; i++) {
-            char[] chars = new char[lineCount];
-            Arrays.fill(chars, ' ');
-            result[i] = new String(chars);
+            result[i] = lineFor(c, i);
         }
         return result;
     }
@@ -73,6 +104,9 @@ public class DiamondTest {
         return new int[]{i1, i2};
     }
 
+    private String[] arrayOf(String... strings) {
+        return strings;
+    }
 
     interface LinesChecker {
         void check(char c, String[] lines);
