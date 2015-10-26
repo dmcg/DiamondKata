@@ -6,10 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 public class DiamondTest {
 
-    public interface LinesChecker {
-        void check(char c, String[] lines);
-    }
-
     @Test
     public void line_count() {
         checkLines((c, lines) ->
@@ -17,25 +13,11 @@ public class DiamondTest {
         );
     }
 
-
     @Test
     public void character_count() {
-        checkLines((c, lines) -> {
-            for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-                assertEquals(String.format("For character %s, line %s, %s", c, i, line), lineCountFor(c), line.length());
-            }
+        checkLines((c, i, line) -> {
+            assertEquals(String.format("For character %s, line %s, %s", c, i, line), lineCountFor(c), line.length());
         });
-    }
-
-    private void checkLines(LinesChecker checker) {
-        for (char c = 'A'; c <= 'Z'; c++) {
-            checker.check(c, diamond(c));
-        }
-    }
-
-    private int lineCountFor(char c) {
-        return 2 * (c - 'A') + 1;
     }
 
     private String[] diamond(char c) {
@@ -50,4 +32,32 @@ public class DiamondTest {
         }
         return result;
     }
+
+
+    interface LinesChecker {
+        void check(char c, String[] lines);
+    }
+
+    interface LineChecker {
+        void check(char c, int index, String line);
+    }
+
+    private void checkLines(LineChecker checker) {
+        checkLines((c, lines) -> {
+            for (int i = 0; i < lines.length; i++) {
+                checker.check(c, i, lines[i]);
+            }
+        });
+    }
+
+    private void checkLines(LinesChecker checker) {
+        for (char c = 'A'; c <= 'Z'; c++) {
+            checker.check(c, diamond(c));
+        }
+    }
+
+    private int lineCountFor(char c) {
+        return 2 * (c - 'A') + 1;
+    }
+
 }
