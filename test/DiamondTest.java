@@ -15,13 +15,31 @@ public class DiamondTest {
 
     @Test
     public void character_count() {
-        checkLines((c, i, line) -> {
-            assertEquals(String.format("For character %s, line %s, %s", c, i, line), lineCountFor(c), line.length());
+        checkLines((c, index, line) -> {
+            assertEquals(String.format("For character %s, line %s, %s", c, index, line), lineCountFor(c), line.length());
         });
     }
 
+    @Test
+    public void character_for_line_goes_up_then_down() {
+        assertEquals('A', characterForLine('A', 0));
+
+        assertEquals('A', characterForLine('C', 0));
+        assertEquals('B', characterForLine('C', 1));
+        assertEquals('C', characterForLine('C', 2));
+        assertEquals('B', characterForLine('C', 3));
+        assertEquals('A', characterForLine('C', 4));
+
+    }
+
+    private char characterForLine(char c, int index) {
+        int distanceFromEnd = index <= ordinal(c) ? index : lineCountFor(c) - index - 1;
+        return (char) ('A' + distanceFromEnd);
+    }
+
+
     private String[] diamond(char c) {
-        int ordinal = c - 'A';
+        int ordinal = ordinal(c);
         int lineCount = 2 * ordinal + 1;
         String[] result = new String[lineCount];
 
@@ -57,7 +75,11 @@ public class DiamondTest {
     }
 
     private int lineCountFor(char c) {
-        return 2 * (c - 'A') + 1;
+        return 2 * ordinal(c) + 1;
+    }
+
+    private int ordinal(char c) {
+        return c - 'A';
     }
 
 }
