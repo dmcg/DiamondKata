@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.function.Predicate;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -21,18 +23,31 @@ public class DiamondTest {
         );
     }
 
+    @Test
+    public void line_count() {
+        for (char c = 'A'; c <= 'Z'; c++) {
+            int ordinal = c - 'A';
+            int lineCount = 2 * ordinal + 1;
+            String[] diamond = diamond(c);
+            assertEquals("For character " + c, lineCount, diamond.length);
+        }
+    }
+
     private void assertDiamond(char c, String... lines) {
         assertArrayEquals(lines, diamond(c));
     }
 
-    private String[] diamond(char a) {
-        if (a == 'A')
+    private String[] diamond(char c) {
+        int ordinal = c - 'A';
+        int lineCount = 2 * ordinal + 1;
+        if (c == 'A')
         return new String[] {"A"};
-        else return                new String[]
+        else if (c == 'B') return                new String[]
                 {
                         "A",
                         "BB",
                         "A"
                 };
+        else return new String[lineCount];
     }
 }
