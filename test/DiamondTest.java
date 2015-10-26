@@ -7,22 +7,22 @@ public class DiamondTest {
 
     @Test
     public void a_is_a_single_line() {
-        assertArrayEquals(
-                new String[]{"A"}, diamond('A')
+        assertDiamond('A',
+                "A"
         );
     }
 
     @Test
     public void b_is_three_lines() {
-        assertArrayEquals(
-                new String[]
-                        {
-                        "A",
-                        "BB",
-                        "A"
-                        },
-                diamond('B')
+        assertDiamond('B',
+                "A",
+                "BB",
+                "A"
         );
+    }
+
+    private void assertDiamond(char c, String... lines) {
+        assertArrayEquals(lines, diamond(c));
     }
 
     private String[] diamond(char a) {
