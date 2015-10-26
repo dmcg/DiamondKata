@@ -6,27 +6,36 @@ import static org.junit.Assert.assertEquals;
 
 public class DiamondTest {
 
-    @Test
-    public void line_count() {
-        for (char c = 'A'; c <= 'Z'; c++) {
-            int ordinal = c - 'A';
-            int lineCount = 2 * ordinal + 1;
-            String[] diamond = diamond(c);
-            assertEquals("For character " + c, lineCount, diamond.length);
-        }
+    public interface LinesChecker {
+        void check(char c, String[] lines);
     }
 
     @Test
+    public void line_count() {
+        checkLines((c, lines) ->
+            assertEquals("For character " + c, lineCountFor(c), lines.length)
+        );
+    }
+
+
+    @Test
     public void character_count() {
-        for (char c = 'A'; c <= 'Z'; c++) {
-            int ordinal = c - 'A';
-            int lineCount = 2 * ordinal + 1;
-            String[] diamond = diamond(c);
-            for (int i = 0; i < diamond.length; i++) {
-                String line = diamond[i];
-                assertEquals(String.format("For character %s, line %s, %s", c, i, line), lineCount, line.length());
+        checkLines((c, lines) -> {
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
+                assertEquals(String.format("For character %s, line %s, %s", c, i, line), lineCountFor(c), line.length());
             }
+        });
+    }
+
+    private void checkLines(LinesChecker checker) {
+        for (char c = 'A'; c <= 'Z'; c++) {
+            checker.check(c, diamond(c));
         }
+    }
+
+    private int lineCountFor(char c) {
+        return 2 * (c - 'A') + 1;
     }
 
     private String[] diamond(char c) {
